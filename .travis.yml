@@ -1,12 +1,12 @@
 language: python
 dist: trusty
 
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
+# addons:
+#   apt:
+#     sources:
+#       - google-chrome
+#     packages:
+#       - google-chrome-stable
 
 python:
   - "2.7"
@@ -32,15 +32,22 @@ install:
   - docker run -d -it --name erpnext-travis -p 8000:8000 -p 9000:9000 -p 6787:6787 -v $TRAVIS_BUILD_DIR:/home/frappe/erpnext vishaljsesh/erpnext-travis:latest
 
 before_script:
-  - wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
-  - unzip chromedriver_linux64.zip
-  - sudo apt-get install libnss3
-  - sudo apt-get --only-upgrade install google-chrome-stable
-  - sudo cp chromedriver /usr/local/bin/.
-  - sudo chmod +x /usr/local/bin/chromedriver
-  - export DISPLAY=:99.0
+  # - wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
+  # - unzip chromedriver_linux64.zip
+  # - sudo apt-get install libnss3
+  # - sudo apt-get --only-upgrade install google-chrome-stable
+  # - sudo cp chromedriver /usr/local/bin/.
+  # - sudo chmod +x /usr/local/bin/chromedriver
+  # - export DISPLAY=:99.0
   # - sh -e /etc/init.d/xvfb start
   # - sleep 3
+  - docker exec -i erpnext-travis bash -c "wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
+  - docker exec -i erpnext-travis bash -c "unzip chromedriver_linux64.zip"
+  - docker exec -i erpnext-travis bash -c "apt-get install libnss3"
+  - docker exec -i erpnext-travis bash -c "apt-get install google-chrome-stable xvfb"
+  - docker exec -i erpnext-travis bash -c "cp chromedriver /usr/local/bin/."
+  - docker exec -i erpnext-travis bash -c "chmod +x /usr/local/bin/chromedriver"
+  - docker exec -i erpnext-travis bash -c "export DISPLAY=:99.0"
   - docker exec -i erpnext-travis bash -c "service mysql restart"
   # - mysql -u root -ptravis -e 'create database test_frappe'
 
