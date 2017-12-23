@@ -7,15 +7,15 @@ python:
 services:
   - docker
 
-cache:
-  directories:
-  - ~/docker
+# cache:
+#   directories:
+#   - ~/docker
 
 install:
   - sudo rm /etc/apt/sources.list.d/docker.list
-  - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+  # - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
   - docker pull frappe/erpnext:ubuntu_16.04_develop
-  - mkdir -p ~/docker; docker save frappe/erpnext:ubuntu_16.04_develop > ~/docker/image.tar
+  # - mkdir -p ~/docker; docker save frappe/erpnext:ubuntu_16.04_develop > ~/docker/image.tar
 
 before_script:
   - docker run -d -p 127.0.0.1:80:4567 -it --name erpnext-travis frappe/erpnext:ubuntu_16.04_develop
