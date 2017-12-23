@@ -18,7 +18,7 @@ install:
   - mkdir -p ~/docker; docker save frappe/erpnext:ubuntu_16.04_develop > ~/docker/image.tar
 
 before_script:
-  - docker run -d -p 127.0.0.1:80:4567 -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
+  - docker run -d -p 127.0.0.1:80:4567 -it --name erpnext-travis frappe/erpnext:ubuntu_16.04_develop
   - sleep 10
   # - docker exec -i erpnext-travis bash -c "wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
   # - docker exec -i erpnext-travis bash -c "unzip chromedriver_linux64.zip"
