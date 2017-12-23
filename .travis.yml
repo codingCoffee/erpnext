@@ -10,9 +10,15 @@ services:
 install:
   - sudo rm /etc/apt/sources.list.d/docker.list
   - docker pull frappe/erpnext:ubuntu_16.04_develop
-  - docker run -d -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
+  - docker save frappe/erpnext:ubuntu_16.04_develop | gzip > docker/frappe_erpnext_ubuntu_16.04_develop.tar.gz
+
+cache:
+  directories:
+  - docker
 
 before_script:
+  - gzip -dc docker/frappe_erpnext_ubuntu_16.04_develop.tar.gz | docker load
+  - docker run -d -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
   # - docker exec -i erpnext-travis bash -c "wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
   # - docker exec -i erpnext-travis bash -c "unzip chromedriver_linux64.zip"
   # - docker exec -i erpnext-travis bash -c "apt-get install libnss3"
