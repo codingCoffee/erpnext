@@ -7,18 +7,18 @@ python:
 services:
   - docker
 
-install:
-  - sudo rm /etc/apt/sources.list.d/docker.list
-  - docker pull frappe/erpnext:ubuntu_16.04_develop
-  - docker save frappe/erpnext:ubuntu_16.04_develop | gzip > docker/frappe_erpnext_ubuntu_16.04_develop.tar.gz
-
 cache:
   directories:
-  - docker
+  - ~/docker
+
+install:
+  - sudo rm /etc/apt/sources.list.d/docker.list
+  - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+  - docker pull frappe/erpnext:ubuntu_16.04_develop
+  - mkdir -p ~/docker; docker save frappe/erpnext:ubuntu_16.04_develop > ~/docker/image.tar
+  - docker run -d -p 127.0.0.1:80:4567 -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
 
 before_script:
-  - gzip -dc docker/frappe_erpnext_ubuntu_16.04_develop.tar.gz | docker load
-  - docker run -d -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
   - sleep 10
   # - docker exec -i erpnext-travis bash -c "wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
   # - docker exec -i erpnext-travis bash -c "unzip chromedriver_linux64.zip"
@@ -36,7 +36,7 @@ before_script:
   # - CURRENT_BRANCH_HEAD=$(docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench/apps/erpnext && git rev-parse HEAD")
   # - diff <( echo \"$PR_BRANCH_HEAD\" ) <( echo \"$CURRENT_BRANCH_HEAD\" )
   # - docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench/apps/frappe && git config --global user.email 'you@example.com' && git config --global user.name 'Your Name' && git add . && git stash && git pull --rebase upstream develop"
-  # - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench && bench setup requirements && bench build"
+  - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench && bench setup requirements && bench build"
   - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench && bench reinstall --yes && bench migrate"
   - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench && bench scheduler disable"
   # - docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench && bench start &"
