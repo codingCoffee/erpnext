@@ -32,6 +32,7 @@ before_script:
   # Update frappe
   - free
   - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench/apps/frappe && git pull"
+  - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench/apps/erpnext && git pull"
   # - PR_BRANCH_HEAD=$(docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench/apps/erpnext && git rev-parse HEAD")
   # - docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench/apps/erpnext && git remote add test ~/erpnext/ && git fetch --unshallow test && git checkout -b test -t test/$TRAVIS_BRANCH"
   # - CURRENT_BRANCH_HEAD=$(docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench/apps/erpnext && git rev-parse HEAD")
@@ -54,5 +55,5 @@ jobs:
       script:
         - set -e
         # - bench run-tests
-        - docker exec -iu frappe erpnext-travis bash -c "cd ~/frappe-bench && bench run-tests"
+        - docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench && bench run-tests"
       env: Server Side Test
