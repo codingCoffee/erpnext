@@ -16,9 +16,9 @@ install:
   - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
   - docker pull frappe/erpnext:ubuntu_16.04_develop
   - mkdir -p ~/docker; docker save frappe/erpnext:ubuntu_16.04_develop > ~/docker/image.tar
-  - docker run -d -p 127.0.0.1:80:4567 -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
 
 before_script:
+  - docker run -d -p 127.0.0.1:80:4567 -it --name erpnext-travis -v $TRAVIS_BUILD_DIR:/home/frappe/frappe-bench/apps/erpnext frappe/erpnext:ubuntu_16.04_develop
   - sleep 10
   # - docker exec -i erpnext-travis bash -c "wget http://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip"
   # - docker exec -i erpnext-travis bash -c "unzip chromedriver_linux64.zip"
@@ -30,6 +30,7 @@ before_script:
   # - docker exec -i erpnext-travis bash -c "service mysql restart"
 
   # Update frappe
+  - free
   - docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench/apps/frappe && git pull"
   # - PR_BRANCH_HEAD=$(docker exec -itu frappe erpnext-travis zsh -c "cd /home/frappe/frappe-bench/apps/erpnext && git rev-parse HEAD")
   # - docker exec -itu frappe erpnext-travis bash -c "cd ~/frappe-bench/apps/erpnext && git remote add test ~/erpnext/ && git fetch --unshallow test && git checkout -b test -t test/$TRAVIS_BRANCH"
